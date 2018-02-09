@@ -29,10 +29,18 @@ struct rgb {
 * @Returns:
 *    void
 */
-void flipVert(rgb** image, int width, int height) {
-	for (int i = 0; i < height/2; i++)
+void flipVert(rgb** image, rgb** temp, int width, int height) {
+	for (int i = 0; i < height; i++)    // copy image into temporary array
 	{
+		temp[i] = image[i];
+	}
+	for (int i = 0; i < height/2; i++)   // takes first half of image and converts it 
+	{                                    // to the inverse of the bottom half of image
 		image[i] = image[height - 1 - i];
+	}
+	for (int i = height/2; i < height; i++)   // turns second half image into the inverse
+	{                                         //  of the first half of temporary image
+		image[i] = temp[i - 2*(i - height/2)];
 	}
 }
 /**
@@ -46,10 +54,19 @@ void flipVert(rgb** image, int width, int height) {
 * @Returns:
 *    void
 */
-void flipHorz(rgb** image, int width, int height) {
-	for (int i = 0; i < width/2; i++)
-	{
-		image[i] = image[width - 1 - i];
+void flipHorz(rgb** image, rgb** temp, int width, int height) {
+	for (int i = 0; i < height; i++){   // copy image into temporary array
+		temp[i] = image[i];
+	}
+	for (int i = 0; i < height; i++){     // takes first half of the image columns and 
+		for (int j = 0; j < width/2; j++){    // converts to inverse of second half
+			image[i][j] = image[i][width - 1 - j];
+		}
+	}
+	for (int i = 0; i < height; i++){    // turns second half of image columns and
+		for (int j = width/2; j < width; j++){   // converts to inverse of first half
+			image[i][j] = temp[i][j - 2 * (j - width / 2)];   // of temporary image
+		}
 	}
 }
 /**
@@ -88,21 +105,22 @@ void grayScale(rgb** image, int width, int height) {
 int main() {
 	ifstream ifile;          //Input / output files
 	ofstream ofile;
-	ifile.open("Input.txt");
-	ofile.open("Output.txt");
+	ifile.open("school_bus.txt");
+	ofile.open("school_bus_flip_vert.txt");
 
 	int width;               //width of image
 	int height;              //height of image
 
 	rgb **imgArray;         //Pointer var for our 2D array because we         
-							//don't know how big the image will be!
+	rgb **temporary;	//don't know how big the image will be!
 
 	ifile >> width >> height;   //Read in width and height from top of input file
-								//We need this so we can make the array the right 
-								//size. After we get these two values, we can
-								//now allocate memory for our 2D array.
+				    //We need this so we can make the array the right 
+				    //size. After we get these two values, we can
+				    //now allocate memory for our 2D array.
 	
 	imgArray = new rgb*[height];    //This array points to every row
+	temporary = new rgb*[height];
 
 	for (int i = 0; i<height; i++) {
 		imgArray[i] = new rgb[width]; //Now allocate each row of rgb's
@@ -115,8 +133,8 @@ int main() {
 		}
 	}
 	//We could make any changes we want to the color image here
-	flipHorz(imgArray, width, height);
-	flipVert(imgArray, width, height);
+	flipHorz(imgArray, temporary, width, height);
+	flipVert(imgArray, temporary, width, height);
 	grayScale(imgArray, width, height);
 
 	//Write out our color data to a new file
