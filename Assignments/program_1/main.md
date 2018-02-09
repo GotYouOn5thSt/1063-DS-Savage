@@ -1,4 +1,15 @@
 ```cpp
+
+/**
+* @ProgramName: Program-1
+* @Author: Roderic Savage
+* @Description:
+*     This program reads in images stored as rgb values in a space delimited file format.
+* @Course: 1063 Data Structures
+* @Semester: Spring 2018
+* @Date: 02 09 2018
+*/
+
 #include<iostream>
 #include<fstream>
 #include<math.h>
@@ -94,15 +105,7 @@ void grayScale(rgb** image, int width, int height) {
 	}
 }
 
-/**
-* @ProgramName: Program-1
-* @Author: Roderic Savage
-* @Description:
-*     This program reads in images stored as rgb values in a space delimited file format.
-* @Course: 1063 Data Structures
-* @Semester: Spring 2018
-* @Date: 02 09 2018
-*/
+
 int main() {
 	ifstream ifile;          //Input / output files
 	ofstream ofile;
